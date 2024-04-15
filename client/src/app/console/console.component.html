@@ -1,0 +1,63 @@
+<section class="container">
+  <!-- disable text area -->
+  <section class="buttons">
+    <button class="btn btn-primary" (click)="setConsole()">Consola</button>
+    <button class="btn btn-warning" (click)="setSymbols()">Tabla de simbolos</button>
+    <button class="btn btn-danger" (click)="setErrors()">Errores</button>
+  </section>
+  @if(console){
+  <textarea rows="" cols="" disabled>{{getReceivedData()['console']}}</textarea>
+  }
+  @if(errors){
+  <table class="table-fill">
+    <thead>
+      <tr>
+        <th class="text-left">Descripción</th>
+        <th class="text-left">Ambiente</th>
+        <th class="text-left">Tipo</th>
+        <th class="text-left">Línea</th>
+        <th class="text-left">Colúmna</th>
+      </tr>
+    </thead>
+    <tbody class="table-hover">
+      @for(err of getReceivedData()['errors']; track err){
+      <tr>
+        <td class="text-left">{{err.description}}</td>
+        <td class="text-left">{{err.env}}</td>
+        <td class="text-left">{{err.type}}</td>
+        <td class="text-left">{{err.line}}</td>
+        <td class="text-left">{{err.column}}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  }
+  @if(symbols){
+  <table class="table-fill">
+    <thead>
+      <tr>
+        <th class="text-left">ID</th>
+        <th class="text-left">Ambito</th>
+        <th class="text-left">Valor</th>
+        <th class="text-left">Tipo</th>
+        <th class="text-left">Linea</th>
+        <th class="text-left">Columna</th>
+      </tr>
+    </thead>
+    <tbody class="table-hover">
+      @for(item of getReceivedData()['table']; track item){
+
+      <tr>
+        <td class="text-left">{{item.id}}</td>
+        <td class="text-left">{{item.env}}</td>
+        <td class="text-left">{{item.value}}</td>
+        <td class="text-left">{{item.type}}</td>
+        <td class="text-left">{{item.line}}</td>
+        <td class="text-left">{{item.column}}</td>
+      </tr>
+
+      }
+    </tbody>
+  </table>
+  }
+</section>

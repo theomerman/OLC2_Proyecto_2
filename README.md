@@ -1,1 +1,7 @@
-# OLC2_Proyecto_2
+# OLC2_Proyecto_1
+## Python Dependencies
+
+- flask
+- PLY
+- numpy
+- flask_cors
