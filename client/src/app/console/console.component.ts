@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SendToServerService } from '../services/sendToServer/send-to-server.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-console',
@@ -17,7 +18,7 @@ export class ConsoleComponent {
   code: string = '';
   errorList: any;
 
-  constructor(private receivedData: SendToServerService) {
+  constructor(private receivedData: SendToServerService, private clipboard: Clipboard) {
     // this.receivedData.variableSubject.subscribe(data => {
     //   this.code = data;
     // });
@@ -40,8 +41,7 @@ export class ConsoleComponent {
   getReceivedData(): any {
     return this.receivedData.object;
   }
-
-
-
-
+  copyToClipboard(): void {
+    this.clipboard.copy(this.getReceivedData()['console']);
+  }
 }

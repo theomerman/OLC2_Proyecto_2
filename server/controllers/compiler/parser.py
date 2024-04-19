@@ -612,7 +612,7 @@ def p_embed_functions3_1(p):
 def p_embed_functions4(p):
     '''exp : exp DOT TOLOWERCASE LPAREN RPAREN'''
     position = get_params(p)
-    p[0] = EmbedFunctions(p[3], p[1], postion.line, position.column)
+    p[0] = EmbedFunctions(p[3], p[1], position.line, position.column)
 
 
 def p_embed_functions4_1(p):
@@ -826,8 +826,8 @@ def p_exp_literals(p):
     position = get_params(p)
     if isinstance(p[1], Primitive):
         # print("entro",position.line)
-        p[1].symbol.line = position.line
-        p[1].symbol.col = position.column
+        p[1].value_object.line = position.line
+        p[1].value_object.col = position.column
 
     p[0] = p[1]
 

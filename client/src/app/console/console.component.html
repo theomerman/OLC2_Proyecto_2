@@ -4,6 +4,7 @@
     <button class="btn btn-primary" (click)="setConsole()">Consola</button>
     <button class="btn btn-warning" (click)="setSymbols()">Tabla de simbolos</button>
     <button class="btn btn-danger" (click)="setErrors()">Errores</button>
+    <button class="btn btn-danger" (click)="copyToClipboard()">Copy</button>
   </section>
   @if(console){
   <textarea rows="" cols="" disabled>{{getReceivedData()['console']}}</textarea>

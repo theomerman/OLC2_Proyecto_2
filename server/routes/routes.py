@@ -5,6 +5,7 @@ from controllers.environment.ast import Ast
 from controllers.environment.error import Error
 from controllers.environment.symbol import Symbol
 from controllers.expressions.primitive import Primitive
+from controllers.environment.generator import Generator
 
 routes = Blueprint("routes", __name__)
 
@@ -18,14 +19,16 @@ def sendCode():
 
     env = Environment(None, "global")
     ast = Ast()
+    gen = Generator()
     parser = None
     parser = Parser()
 
+
     instuctions = parser.parse(data)
     for intruction in instuctions:
-        intruction.run(ast, env)
+        intruction.run(ast, env, gen)
     errors = serialize_errors(ast.errors)
-    ast.symbol_table.insert(0,[env.id,env.table])
+    ast.symbol_table.insert(0, [env.id, env.table])
 
     # table = serialize_symbol_table([env.id,env.table])
     table = serialize(ast.symbol_table)
@@ -37,7 +40,7 @@ def sendCode():
     try:
         return jsonify(
             {
-                "console": ast.console,
+                "console": gen.get_full_code(),
                 "errors": errors,
                 "table": table,
             }
@@ -46,25 +49,27 @@ def sendCode():
         print(e)
         return jsonify(
             {
-            "console": ast.console,
-            "errors": errors,
-            "table": [],
+                "console": ast.console,
+                "errors": errors,
+                "table": [],
             }
         )
 
-def serialize_errors(_errors:list[Error]):
+
+def serialize_errors(_errors: list[Error]):
     errors = []
     for error in _errors:
         errors.append(
             {
-            "description": error.description,
-            "env": error.env,
-            "type": error.type,
-            "line": error.line,
-            "column": error.column,
+                "description": error.description,
+                "env": error.env,
+                "type": error.type,
+                "line": error.line,
+                "column": error.column,
             }
         )
     return errors
+
 
 def serialize(tables: list[list]):
     tb = []
@@ -72,6 +77,7 @@ def serialize(tables: list[list]):
         tb += (serialize_symbol_table(table))
     # print(tb)
     return tb
+
 
 def serialize_symbol_table(symbol_table: list):
     keys = symbol_table[1].keys()
@@ -82,23 +88,23 @@ def serialize_symbol_table(symbol_table: list):
             if type(tmp) == str or type(tmp) == int or type(tmp) == float or type(tmp) == bool:
                 table.append(
                     {
-                "id": key,
-                "env": symbol_table[0],
-                "value": symbol_table[1][key].value,
-                "type": symbol_table[1][key].type.name,
-                "line": symbol_table[1][key].line,
-                "column": symbol_table[1][key].col,
+                        "id": key,
+                        "env": symbol_table[0],
+                        "value": symbol_table[1][key].value,
+                        "type": symbol_table[1][key].type.name,
+                        "line": symbol_table[1][key].line,
+                        "column": symbol_table[1][key].col,
                     }
                 )
             else:
                 table.append(
                     {
-                "id": key,
-                "env": symbol_table[0],
-                "value": "Objeto",
-                "type": symbol_table[1][key].type.name,
-                "line": symbol_table[1][key].line,
-                "column": symbol_table[1][key].col,
+                        "id": key,
+                        "env": symbol_table[0],
+                        "value": "Objeto",
+                        "type": symbol_table[1][key].type.name,
+                        "line": symbol_table[1][key].line,
+                        "column": symbol_table[1][key].col,
                     }
                 )
         elif type(symbol_table[1][key]) == Primitive:
@@ -107,36 +113,35 @@ def serialize_symbol_table(symbol_table: list):
             if type(tmp) == str or type(tmp) == int or type(tmp) == float or type(tmp) == bool:
                 table.append(
                     {
-                "id": key,
-                "env": symbol_table[0],
-                "value": symbol_table[1][key].value,
-                "type": symbol_table[1][key].type.name,
-                "line": symbol_table[1][key].line,
-                "column": symbol_table[1][key].column,
+                        "id": key,
+                        "env": symbol_table[0],
+                        "value": symbol_table[1][key].value,
+                        "type": symbol_table[1][key].type.name,
+                        "line": symbol_table[1][key].line,
+                        "column": symbol_table[1][key].column,
                     }
                 )
             else:
                 table.append(
                     {
-                "id": key,
-                "env": symbol_table[0],
-                "value": "Objeto",
-                "type": symbol_table[1][key].type.name,
-                "line": symbol_table[1][key].line,
-                "column": symbol_table[1][key].column,
+                        "id": key,
+                        "env": symbol_table[0],
+                        "value": "Objeto",
+                        "type": symbol_table[1][key].type.name,
+                        "line": symbol_table[1][key].line,
+                        "column": symbol_table[1][key].column,
                     }
                 )
         else:
             table.append(
                 {
-                "id": key,
-                "env": symbol_table[0],
-                "value": "Objeto",
-                "type": symbol_table[1][key].type.name,
-                "line": symbol_table[1][key].line,
-                "column": symbol_table[1][key].column,
+                    "id": key,
+                    "env": symbol_table[0],
+                    "value": "Objeto",
+                    "type": symbol_table[1][key].type.name,
+                    "line": symbol_table[1][key].line,
+                    "column": symbol_table[1][key].column,
                 }
             )
 
     return table
-
