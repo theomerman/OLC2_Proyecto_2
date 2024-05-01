@@ -1,6 +1,7 @@
 from controllers.interfaces.expression import Expression
 from controllers.environment.environment import Environment
 from controllers.environment.ast import Ast
+from controllers.environment.generator import Generator
 
 
 class Access(Expression):
@@ -9,5 +10,5 @@ class Access(Expression):
         self.line = line
         self.column = column
 
-    def run(self, ast: Ast, env: Environment):
+    def run(self, ast: Ast, env: Environment, gen: Generator):
         return env.get_variable(ast, self.id)

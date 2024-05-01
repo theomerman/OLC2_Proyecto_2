@@ -2,6 +2,8 @@ from controllers.environment.symbol import Symbol
 from controllers.environment.ast import Ast
 from controllers.environment.error import Error
 from controllers.environment.types import ExpressionType
+from controllers.environment.value import Value
+# from controllers.interfaces.expression import Expression
 
 
 class Environment:
@@ -39,7 +41,8 @@ class Environment:
             0
         )
         )
-        return Symbol(0, 0, ExpressionType.NULL.name, ExpressionType.NULL)
+        # return Symbol(0, 0, ExpressionType.NULL.name, ExpressionType.NULL)
+        return Value("x0", ExpressionType.NULL, 0, 0)
 
     def update_variable(self, ast: Ast, id: str, operator: str, symbol: Symbol, line, column):
         # print(operator)

@@ -6,7 +6,9 @@ from controllers.environment.error import Error
 from controllers.environment.symbol import Symbol
 from controllers.expressions.primitive import Primitive
 from controllers.environment.generator import Generator
+from icecream import ic
 
+from controllers.environment.value import Value
 routes = Blueprint("routes", __name__)
 
 
@@ -83,17 +85,17 @@ def serialize_symbol_table(symbol_table: list):
     keys = symbol_table[1].keys()
     table = []
     for key in keys:
-        if type(symbol_table[1][key]) == Symbol:
+        if type(symbol_table[1][key]) == Value:
             tmp = symbol_table[1][key].value
             if type(tmp) == str or type(tmp) == int or type(tmp) == float or type(tmp) == bool:
                 table.append(
                     {
                         "id": key,
                         "env": symbol_table[0],
-                        "value": symbol_table[1][key].value,
+                        "value": symbol_table[1][key].generic,
                         "type": symbol_table[1][key].type.name,
                         "line": symbol_table[1][key].line,
-                        "column": symbol_table[1][key].col,
+                        "column": symbol_table[1][key].column,
                     }
                 )
             else:
@@ -104,7 +106,7 @@ def serialize_symbol_table(symbol_table: list):
                         "value": "Objeto",
                         "type": symbol_table[1][key].type.name,
                         "line": symbol_table[1][key].line,
-                        "column": symbol_table[1][key].col,
+                        "column": symbol_table[1][key].column,
                     }
                 )
         elif type(symbol_table[1][key]) == Primitive:

@@ -5,6 +5,7 @@ from controllers.environment.ast import Ast
 from controllers.environment.types import ExpressionType
 from controllers.environment.generator import Generator
 from controllers.environment.value import Value
+from icecream import ic
 
 string = ""
 
@@ -28,6 +29,14 @@ class Print(Instruction):
                 else:
                     if value.type == ExpressionType.NUMBER:
                         gen.add_print(value.value)
+                    elif value.type == ExpressionType.STRING:
+                        gen.add_print_string(value.value)
+                    elif value.type == ExpressionType.FLOAT:
+                        gen.add_print_float(value.value)
+                    elif value.type == ExpressionType.BOOLEAN:
+                        gen.add_print(value.value)
+                    elif value.type == ExpressionType.CHAR:
+                        gen.add_print_string(value.value)
 
                     console += str(value.value) + " "
 
@@ -39,7 +48,14 @@ class Print(Instruction):
                 else:
                     if value.type == ExpressionType.NUMBER:
                         gen.add_print(value.run(ast,env,gen).value)
+                    elif value.type == ExpressionType.STRING:
+                        gen.add_print_string(value.value)
+                    elif value.type == ExpressionType.FLOAT:
+                        gen.add_print_float(value.value)
                     console += str(value.run(ast, env, gen).value) + " "
+        gen.add_la("a0", "next_line")
+        gen.add_li("a7", 4)
+        gen.add_ecall()
         ast.set_console(console)
 
 
