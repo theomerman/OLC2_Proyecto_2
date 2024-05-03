@@ -1,8 +1,10 @@
+from icecream import ic
 from controllers.environment.symbol import Symbol
 from controllers.environment.ast import Ast
 from controllers.environment.error import Error
 from controllers.environment.types import ExpressionType
 from controllers.environment.value import Value
+from controllers.environment.generator import Generator
 # from controllers.interfaces.expression import Expression
 
 
@@ -44,7 +46,7 @@ class Environment:
         # return Symbol(0, 0, ExpressionType.NULL.name, ExpressionType.NULL)
         return Value("x0", ExpressionType.NULL, 0, 0)
 
-    def update_variable(self, ast: Ast, id: str, operator: str, symbol: Symbol, line, column):
+    def update_variable(self,gen:Generator, ast: Ast, id: str, operator: str, symbol: Symbol, line, column):
         # print(operator)
         if id in self.table:
 
@@ -70,7 +72,24 @@ class Environment:
                 )
                 return
             if operator == "=":
-                self.table[id] = symbol
+
+                if(symbol.type == ExpressionType.NUMBER or symbol.type == ExpressionType.BOOLEAN):
+
+                    tmp = self.table[id]
+                    tmp_value = tmp.value
+
+
+                    gen.label_queue[0].append(f"\tli t0, {str(tmp.value)}\n")
+                    gen.label_queue[0].append(f"\tli t1, {str(symbol.value)}\n")
+                    gen.label_queue[0].append(f"\tlw t1, {gen.get_offset()}(t1)\n")
+                    gen.label_queue[0].append(f"\tsw t1, {gen.get_offset()}(t0)\n")
+
+                    self.table[id] = symbol
+
+                    tmp = self.table[id]
+                    tmp.value = tmp_value
+                else:
+                    self.table[id] = symbol
                 # print(symbol.value)
                 # self.table[id].value = symbol.value
                 # self.table[id].array_type = symbol.array_type
@@ -137,8 +156,7 @@ class Environment:
                 return
             return
         if self.previus is not None:
-            self.previus.update_variable(
-                ast, id, operator, symbol, line, column)
+            self.previus.update_variable(gen, ast, id, operator, symbol, line, column)
             return
         ast.add_error(Error(
             f"La variable \"{id}\" no existe",

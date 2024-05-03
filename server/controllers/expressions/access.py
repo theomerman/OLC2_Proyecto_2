@@ -1,3 +1,4 @@
+from icecream import ic
 from controllers.interfaces.expression import Expression
 from controllers.environment.environment import Environment
 from controllers.environment.ast import Ast

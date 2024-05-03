@@ -9,6 +9,8 @@ class Value:
         self.generic = None
         # self.isTemp = isTemp
         self.type = type
+        self.constant = False
+        self.array_type = ExpressionType.NULL
         # self.truelvl = truelvl
         # self.falselvl = falselvl
         # self.outlvl = outlvl

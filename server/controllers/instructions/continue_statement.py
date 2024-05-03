@@ -2,6 +2,7 @@ from controllers.interfaces.instruction import Instruction
 from controllers.environment.environment import Environment
 from controllers.environment.ast import Ast
 from controllers.environment.error import Error
+from controllers.environment.generator import Generator
 
 
 class Continue(Instruction):
@@ -9,7 +10,7 @@ class Continue(Instruction):
         self.line = line
         self.column = column
 
-    def run(self, ast: Ast, env: Environment):
+    def run(self, ast: Ast, env: Environment, gen: Generator):
         while env.id not in ("while", "for", "global"):
             env = env.previus
         if env.id == "global":
@@ -21,7 +22,8 @@ class Continue(Instruction):
                 self.column
             ))
             return
-        raise ContinueException()
+        gen.label_queue[0].append(f"\tj begin_loop{gen.break_stack[1]}\n")
+        # raise ContinueException()
 
 
 class ContinueException(Exception):

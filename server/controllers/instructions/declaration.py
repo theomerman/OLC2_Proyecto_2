@@ -50,9 +50,13 @@ def set_variable_no_exp(ast: Ast, env: Environment,gen: Generator, id: str, type
     if type is ExpressionType.NUMBER:
         # env.table[id] = Symbol(line, column, 0, type)
         gen.base =+ 4
-        gen.add_li("t0", str(gen.base))
-        gen.add_li("t1", str(0))
-        gen.add_sw("t1", gen.offset, "t0")
+        # gen.add_li("t0", str(gen.base))
+        # gen.add_li("t1", str(0))
+        # gen.add_sw("t1", gen.offset, "t0")
+        arr = gen.label_queue[0]
+        arr.append(f"\tli t0, {gen.get_base()}\n")
+        arr.append(f"\tli t1, 0\n")
+        arr.append(f"\tsw t1, {gen.get_offset()}(t0)\n")
         tmp = Value(str(gen.base), ExpressionType.NUMBER, line, column)
         tmp.setGeneric(0)
         env.table[id] = tmp
@@ -66,9 +70,13 @@ def set_variable_no_exp(ast: Ast, env: Environment,gen: Generator, id: str, type
     elif type is ExpressionType.BOOLEAN:
     #     env.table[id] = Symbol(line, column, False, type)
         gen.base =+ 4
-        gen.add_li("t0", str(gen.base))
-        gen.add_li("t1", str(0))
-        gen.add_sw("t1", gen.offset, "t0")
+        # gen.add_li("t0", str(gen.base))
+        # gen.add_li("t1", str(0))
+        # gen.add_sw("t1", gen.offset, "t0")
+        arr = gen.label_queue[0]
+        arr.append(f"\tli t0, {gen.get_base()}\n")
+        arr.append(f"\tli t1, 0\n")
+        arr.append(f"\tsw t1, {gen.get_offset()}(t0)\n")
         tmp = Value(str(gen.base), ExpressionType.BOOLEAN, line, column)
         tmp.setGeneric(0)
         env.table[id] = tmp

@@ -1,6 +1,6 @@
 console.log("----------------------");
 console.log("----ARCHIVO BASICO----");
-console.log("--------16 pts--------");
+console.log("--------21 pts--------");
 console.log("----------------------");
 
 var bol: boolean = false;
@@ -44,7 +44,7 @@ console.log(x1 % 2 == 0);
 /*
 ----------------------
 ----ARCHIVO BASICO----
---------16 pts--------
+--------21 pts--------
 ----------------------
 El valor de val1 es: 214
 El valor de val2 es: 412
@@ -58,5 +58,4 @@ false
 true
 true
 false
-valor nulo:  null
 */
